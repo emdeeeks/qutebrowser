@@ -29,7 +29,7 @@ from qutebrowser.config import config
 from qutebrowser.utils import usertypes, log, objreg, utils
 from qutebrowser.mainwindow.statusbar import (backforward, command, progress,
                                               keystring, percentage, url,
-                                              tabindex)
+                                              tabindex, settings)
 from qutebrowser.mainwindow.statusbar import text as textwidget
 
 
@@ -183,6 +183,9 @@ class StatusBar(QWidget):
         self._hide_cmd_widget()
 
         self.url = url.UrlText()
+
+        self.settings = settings.TabSettings()
+
         self.percentage = percentage.Percentage()
         self.backforward = backforward.Backforward()
         self.tabindex = tabindex.TabIndex()
@@ -221,6 +224,9 @@ class StatusBar(QWidget):
             if segment == 'url':
                 self._hbox.addWidget(self.url)
                 self.url.show()
+                # TODO: support in config.val.statusbar.widgets
+                self._hbox.addWidget(self.settings)
+                self.settings.show()
             elif segment == 'scroll':
                 self._hbox.addWidget(self.percentage)
                 self.percentage.show()
