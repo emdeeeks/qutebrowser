@@ -72,7 +72,7 @@ from qutebrowser.keyinput import macros
 from qutebrowser.mainwindow import mainwindow, prompt
 from qutebrowser.misc import (readline, ipc, savemanager, sessions,
                               crashsignal, earlyinit, sql, cmdhistory,
-                              backendproblem)
+                              backendproblem, domains)
 from qutebrowser.utils import (log, version, message, utils, urlutils, objreg,
                                usertypes, standarddir, error)
 # pylint: disable=unused-import
@@ -206,6 +206,7 @@ def _init_icon():
 
 def _process_args(args):
     """Open startpage etc. and process commandline args."""
+    domains.init()
     if not args.override_restore:
         _load_session(args.session)
     session_manager = objreg.get('session-manager')

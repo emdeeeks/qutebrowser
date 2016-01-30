@@ -145,6 +145,7 @@ webelem = logging.getLogger('webelem')
 prompt = logging.getLogger('prompt')
 network = logging.getLogger('network')
 sql = logging.getLogger('sql')
+domains = logging.getLogger('domains')
 greasemonkey = logging.getLogger('greasemonkey')
 
 
