@@ -2309,6 +2309,11 @@ bindings.default:
       <Ctrl-p>: tab-pin
       q: record-macro
       "@": run-macro
+      sth: script-toggle
+      stu: script-toggle -p
+      srh: script-toggle -r
+      stu: script-toggle -p -r
+      sta: config-cycle content.javascript.enabled ;; set content.javascript.enabled?
     insert:
       <Ctrl-E>: open-editor
       <Shift-Ins>: insert-text {primary}
