@@ -2313,6 +2313,8 @@ bindings.default:
       stu: domain javascript! -p
       srh: domain javascript! -r
       sru: domain javascript! -p -r
+      ct: domain cookies!
+      cr: domain cookies! -r
       sta: config-cycle content.javascript.enabled ;; set content.javascript.enabled?
     insert:
       <Ctrl-E>: open-editor

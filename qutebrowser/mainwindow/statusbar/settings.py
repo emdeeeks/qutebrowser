@@ -58,6 +58,8 @@ class TabSettings(textbase.TextBase):
         if js_attribute and tab._widget.settings().testAttribute(
                                             js_attribute._attribute):
             text = text + 'S'
+        if objreg.get('cookie-jar').setCookiesFromUrl(None, tab.url(), test=True):
+                text = text + 'C'
         self.setText('['+text+']')
 
     @pyqtSlot(object)
