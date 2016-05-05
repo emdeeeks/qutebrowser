@@ -169,7 +169,7 @@ class DomainManager(QObject):
             msg = "set {} = {} for {}".format(option, value, part)
             message.info(msg)
 
-        self.domain_settings_changed.emit()
+        self.domain_settings_changed.emit(part)
 
     def get_setting(self, url, setting=None, default=None):
         """Get per domain settings.

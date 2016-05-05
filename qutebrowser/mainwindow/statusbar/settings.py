@@ -35,10 +35,19 @@ class TabSettings(textbase.TextBase):
     def __init__(self, parent=None):
         """Constructor."""
         super().__init__(parent)
-        objreg.get('domain-manager').domain_settings_changed.connect(self.set_text)
+        objreg.get('domain-manager').domain_settings_changed.connect(
+            self.on_settings_changed)
 
     @pyqtSlot(str)
-    def set_text(self, tab=None):  # pylint: disable=unused-argument
+    def on_settings_changed(self, url):  # pylint: disable=unused-argument
+        """Settings for some domain changed.
+
+        Args:
+            url: a string of the domain or page, not a QUrl
+        """
+        self.set_text()
+
+    def set_text(self, tab=None):
         """Setter to be used as a Qt slot.
 
         Args:
@@ -49,7 +58,7 @@ class TabSettings(textbase.TextBase):
         if not tab or not isinstance(tab, AbstractTab):
             try:
                 tab = objreg.get('tabbed-browser', scope='window',
-                              window='current')._now_focused
+                                 window='current')._now_focused
             except objreg.RegistryUnavailableError:
                 tab = None
             if not tab:
@@ -60,7 +69,7 @@ class TabSettings(textbase.TextBase):
                                             js_attribute._attribute):
             text = text + 'S'
         if objreg.get('cookie-jar').setCookiesFromUrl(None, tab.url(), test=True):
-                text = text + 'C'
+            text = text + 'C'
         self.setText('['+text+']')
 
     @pyqtSlot(browsertab.AbstractTab)
