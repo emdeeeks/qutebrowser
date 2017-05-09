@@ -231,11 +231,11 @@ def init(args):
     if objects.backend == usertypes.Backend.QtWebEngine:
         from qutebrowser.browser.webengine import webenginesettings
         webenginesettings.init(args)
-        GLOBAL_SETTINGS = webenginesettings.Attribute.GLOBAL_SETTINGS
+        GLOBAL_SETTINGS = webenginesettings.GLOBAL_SETTINGS
     else:
         from qutebrowser.browser.webkit import webkitsettings
         webkitsettings.init(args)
-        GLOBAL_SETTINGS = webkitsettings.Attribute.GLOBAL_SETTINGS
+        GLOBAL_SETTINGS = webkitsettings.GLOBAL_SETTINGS
 
 
 def shutdown():

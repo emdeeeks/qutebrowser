@@ -66,7 +66,7 @@ class TabSettings(textbase.TextBase):
                 return
         js_attribute = websettings.get_attribute("content.javascript.enabled")
         if js_attribute and tab._widget.settings().testAttribute(
-                                            js_attribute._attribute):
+                                            js_attribute._attributes[0]):
             text = text + 'S'
         if objreg.get('cookie-jar').setCookiesFromUrl(None, tab.url(), test=True):
             text = text + 'C'

@@ -45,6 +45,8 @@ default_profile = None
 # The QWebEngineProfile used for private (off-the-record) windows
 private_profile = None
 
+GLOBAL_SETTINGS = QWebEngineSettings.globalSettings
+
 
 class Base(websettings.Base):
 

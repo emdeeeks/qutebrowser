@@ -37,6 +37,8 @@ from qutebrowser.utils import standarddir, urlutils
 from qutebrowser.browser import shared
 
 
+GLOBAL_SETTINGS = QWebSettings.globalSettings
+
 class Base(websettings.Base):
 
     """Base settings class with appropriate _get_global_settings."""
