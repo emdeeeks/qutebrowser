@@ -128,6 +128,7 @@ class WebEnginePage(QWebEnginePage):
 
     certificate_error = pyqtSignal()
     shutting_down = pyqtSignal()
+    new_navigation = pyqtSignal(QUrl)
 
     def __init__(self, *, theme_color, profile, parent=None):
         super().__init__(profile, parent)
@@ -302,6 +303,12 @@ class WebEnginePage(QWebEnginePage):
             msg = urlutils.get_errstring(url, "Invalid link clicked")
             message.error(msg)
             return False
+
+        # Calling this here because AbstractTab._on_url_changed is
+        # called too late when using this backend to eg set the
+        # javascript enabled for the tab and still have the setting take
+        # effect on the tab load.
+        self.new_navigation.emit(url)
         return True
 
     @pyqtSlot('QUrl')

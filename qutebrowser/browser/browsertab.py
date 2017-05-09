@@ -710,7 +710,6 @@ class AbstractTab(QWidget):
         """Update title when URL has changed and no title is available."""
         if url.isValid() and not self.title():
             self.title_changed.emit(url.toDisplayString())
-        self.apply_local_js_policy(url)
         self.apply_local_zoom_policy(url)
         self.url_changed.emit(url)
 

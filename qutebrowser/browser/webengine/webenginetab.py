@@ -886,6 +886,7 @@ class WebEngineTab(browsertab.AbstractTab):
             self._on_proxy_authentication_required)
         page.fullScreenRequested.connect(self._on_fullscreen_requested)
         page.contentsSizeChanged.connect(self.contents_size_changed)
+        page.new_navigation.connect(self._on_navigation_request_accepted)
 
         view.titleChanged.connect(self.title_changed)
         view.urlChanged.connect(self._on_url_changed)
@@ -908,3 +909,8 @@ class WebEngineTab(browsertab.AbstractTab):
 
     def event_target(self):
         return self._widget.focusProxy()
+
+    @pyqtSlot(QUrl)
+    def _on_navigation_request_accepted(self, url):
+        self.apply_local_js_policy(url)
+

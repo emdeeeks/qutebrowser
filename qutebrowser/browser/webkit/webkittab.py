@@ -651,6 +651,7 @@ class WebKitTab(browsertab.AbstractTab):
     @pyqtSlot(QUrl)
     def _on_url_changed(self, url):
         """Update title when URL has changed and no title is available."""
+        self.apply_local_js_policy(url)
         super()._on_url_changed(url)
 
     def _install_event_filter(self):
