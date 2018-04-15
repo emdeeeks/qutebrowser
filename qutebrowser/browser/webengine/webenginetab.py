@@ -27,7 +27,7 @@ import html as html_utils
 
 import sip
 from PyQt5.QtCore import (pyqtSignal, pyqtSlot, Qt, QEvent, QPoint, QPointF,
-                          QUrl, QTimer)
+                          QUrl, QTimer, QFile, QIODevice)
 from PyQt5.QtGui import QKeyEvent, QIcon
 from PyQt5.QtNetwork import QAuthenticator
 from PyQt5.QtWidgets import QApplication
@@ -641,6 +641,15 @@ class WebEngineTab(browsertab.AbstractTab):
         self._saved_zoom = None
         self._reload_url = None
         config.instance.changed.connect(self._on_config_changed)
+        # XXX: When opening a new url in the current tab the first load
+        # has no qt object available when the webchannel script runs.
+        # Opening in a new tab doesn't seem to have this problem. Need
+        # to look into WebEngineView.load(url) and see what that does.
+        # Not sure how we could do anything better on our side but a
+        # minimal test case would probably help.
+        gm_manager = objreg.get("greasemonkey")
+        gm_manager.register_webchannel(widget.page())
+        self._init_webchannel()
         self._init_js()
 
     @pyqtSlot(str)
@@ -718,6 +727,30 @@ class WebEngineTab(browsertab.AbstractTab):
             javascript.assemble('stylesheet', 'set_css', css),
         )
         self._inject_early_js('stylesheet', js_code, subframes=True)
+
+    def _init_webchannel(self):
+        wc_script = QWebEngineScript()
+        wc_script.setInjectionPoint(QWebEngineScript.DocumentCreation)
+        wc_script.setWorldId(QWebEngineScript.MainWorld)
+        qwebchannel_js = QFile(":/qtwebchannel/qwebchannel.js")
+        #qwebchannel_js = QFile("/tmp/qwebchannel.js")
+        if qwebchannel_js.open(QIODevice.ReadOnly):
+            js_src = bytes(qwebchannel_js.readAll()).decode('utf-8')
+            ## XXX: Sometimes get Uncaught ReferenceError: qt is not defined
+            #INFO: [:441] Attaching to qt.webChannelTransport
+            #ERROR:[:442] Uncaught ReferenceError: qt is not defined
+            js_src += """\n
+                    console.log("Attaching to qt.webChannelTransport");
+            new QWebChannel(qt.webChannelTransport, function(channel) {
+                    console.log("MADE A NEW QUTEEEEE!!");
+                      window.qute = channel.objects.qute; });"""
+            wc_script.setSourceCode(js_src)
+        else:
+            wc_script = None
+            log.greasemonkey.error('Failed to load qwebchannel.js with error: '
+                                   '%s' % qwebchannel_js.errorString())
+        scripts = self._widget.page().scripts()
+        if wc_script: scripts.insert(wc_script)
 
     def _inject_userscripts(self):
         """Register user JavaScript files with the global profiles."""
